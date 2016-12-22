@@ -2,7 +2,6 @@ package example.dvdrental.repository;
 
 import example.dvdrental.domain.FilmDomain;
 import example.dvdrental.domain.LanguageDomain;
-import example.dvdrental.model.Film;
 import example.dvdrental.model.Language;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
@@ -26,33 +25,25 @@ public class LanguageRepository {
     public List<LanguageDomain> getLanguages() {
         Query query = entityManager.createQuery("FROM Language");
 
-        List<Language> languages = query.getResultList();
-        return languages.stream()
-                .map(language -> {
-                    LanguageDomain languageDomain = new LanguageDomain();
-                    BeanUtils.copyProperties(language, languageDomain);
-
-                    languageDomain.setFilmDomains(
-                        language.getFilms().stream()
-                        .map(film -> {
-                            FilmDomain filmDomain = new FilmDomain();
-                            BeanUtils.copyProperties(film, filmDomain);
-
-                            return filmDomain;
-                        })
-                        .collect(Collectors.toList())
-                    );
-
-                    return languageDomain;
-                })
-                .collect(Collectors.toList());
+        return fetchToDomain(query.getResultList());
     }
 
     @Transactional
     public List<LanguageDomain> getLanguagesUsingFetchJoin() {
-        Query query = entityManager.createQuery("FROM Language language JOIN FETCH language.films");
+        Query query = entityManager.createQuery("FROM Language language LEFT JOIN FETCH language.films");
 
-        List<Language> languages = query.getResultList();
+        return fetchToDomain(query.getResultList());
+    }
+
+    @Transactional
+    public List<LanguageDomain> getLanguagesUsingFetchJoinByFilmId(Long filmId) {
+        Query query = entityManager.createQuery("FROM Language language LEFT JOIN FETCH language.films film WHERE film.filmId = :filmId");
+        query.setParameter("filmId", filmId);
+
+        return fetchToDomain(query.getResultList());
+    }
+
+    private List<LanguageDomain> fetchToDomain(List<Language> languages) {
         return languages.stream()
                 .map(language -> {
                     LanguageDomain languageDomain = new LanguageDomain();

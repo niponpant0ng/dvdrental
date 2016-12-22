@@ -37,4 +37,11 @@ public class LanguagesTest {
 
         assertThat(languages.size(), is(not(0)));
     }
+
+    @Test
+    public void testGetFilmsUsingFetchJoinByFilmId() {
+        List<LanguageDomain> languages = languageRepository.getLanguagesUsingFetchJoinByFilmId(1L);
+
+        assertThat(languages.size(), is(not(0)));
+    }
 }
