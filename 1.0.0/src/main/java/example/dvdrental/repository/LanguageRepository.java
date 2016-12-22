@@ -47,4 +47,30 @@ public class LanguageRepository {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public List<LanguageDomain> getLanguagesUsingFetchJoin() {
+        Query query = entityManager.createQuery("FROM Language language JOIN FETCH language.films");
+
+        List<Language> languages = query.getResultList();
+        return languages.stream()
+                .map(language -> {
+                    LanguageDomain languageDomain = new LanguageDomain();
+                    BeanUtils.copyProperties(language, languageDomain);
+
+                    languageDomain.setFilmDomains(
+                            language.getFilms().stream()
+                                    .map(film -> {
+                                        FilmDomain filmDomain = new FilmDomain();
+                                        BeanUtils.copyProperties(film, filmDomain);
+
+                                        return filmDomain;
+                                    })
+                                    .collect(Collectors.toList())
+                    );
+
+                    return languageDomain;
+                })
+                .collect(Collectors.toList());
+    }
 }

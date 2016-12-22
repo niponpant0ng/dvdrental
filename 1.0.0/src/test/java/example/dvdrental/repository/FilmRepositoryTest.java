@@ -31,4 +31,12 @@ public class FilmRepositoryTest {
         assertThat(films.size(), is(not(0)));
         films.forEach(film -> assertThat(film.getLanguage(), is(notNullValue())));
     }
+
+    @Test
+    public void testGetFilmsUsingFetchJoin() {
+        List<Film> films = filmRepository.getFilmsUsingFetchJoin();
+
+        assertThat(films.size(), is(not(0)));
+        films.forEach(film -> assertThat(film.getLanguage(), is(notNullValue())));
+    }
 }

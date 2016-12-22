@@ -20,4 +20,9 @@ public class FilmRepository {
         Query query = entityManager.createQuery("FROM Film");
         return query.getResultList();
     }
+
+    public List<Film> getFilmsUsingFetchJoin() {
+        Query query = entityManager.createQuery("FROM Film film JOIN FETCH film.language");
+        return query.getResultList();
+    }
 }
