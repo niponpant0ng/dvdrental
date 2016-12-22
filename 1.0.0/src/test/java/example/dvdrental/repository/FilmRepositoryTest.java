@@ -2,12 +2,16 @@ package example.dvdrental.repository;
 
 import example.dvdrental.AppConfig;
 import example.dvdrental.model.Film;
+import example.dvdrental.model.Language;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,5 +50,23 @@ public class FilmRepositoryTest {
 
         assertThat(films.size(), is(not(0)));
         films.forEach(film -> assertThat(film.getLanguage(), is(notNullValue())));
+    }
+
+    @Test
+    @Transactional
+    public void testCreateFilmWithLanguage() {
+        Language language = new Language();
+        language.setName("test");
+        language.setLastUpdate(new Timestamp(new Date().getTime()));
+
+        Film filmData = new Film();
+        filmData.setTitle("hey test");
+        filmData.setLanguage(language);
+
+        Film film = filmRepository.create(filmData);
+
+        assertThat(film.getFilmId(), is(notNullValue()));
+        assertThat(film.getLanguage(), is(notNullValue()));
+        assertThat(film.getLanguage().getLanguageId(), is(notNullValue()));
     }
 }

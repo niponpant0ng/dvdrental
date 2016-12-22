@@ -45,4 +45,11 @@ public class FilmRepository {
 
         return query.getResultList();
     }
+
+    public Film create(Film filmData) {
+        entityManager.persist(filmData);
+        entityManager.flush();
+
+        return filmData;
+    }
 }

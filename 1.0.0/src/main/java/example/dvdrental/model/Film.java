@@ -1,6 +1,10 @@
 package example.dvdrental.model;
 
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 /**
  * Created by nipon on 12/21/16.
@@ -19,6 +23,7 @@ public class Film {
 
     @ManyToOne
     @JoinColumn(name = "language_id")
+    @Cascade(value = CascadeType.ALL)
     private Language language;
 
     public Long getFilmId() {
