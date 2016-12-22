@@ -39,4 +39,12 @@ public class FilmRepositoryTest {
         assertThat(films.size(), is(not(0)));
         films.forEach(film -> assertThat(film.getLanguage(), is(notNullValue())));
     }
+
+    @Test
+    public void testGetFilmByLanguage() {
+        List<Film> films = filmRepository.getFilmByLanguage();
+
+        assertThat(films.size(), is(not(0)));
+        films.forEach(film -> assertThat(film.getLanguage(), is(notNullValue())));
+    }
 }
