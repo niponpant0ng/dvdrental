@@ -5,6 +5,7 @@ import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.util.Set;
 
 /**
  * Created by nipon on 12/21/16.
@@ -22,9 +23,13 @@ public class Film {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "language_id")
+    @JoinColumn(name = "language_id") // don't want config relation from language side
     @Cascade(value = CascadeType.ALL)
     private Language language;
+
+    @OneToMany(mappedBy = "film")
+    @Cascade(value = CascadeType.SAVE_UPDATE)
+    private Set<Inventory> inventories;
 
     public Long getFilmId() {
         return filmId;
@@ -56,5 +61,13 @@ public class Film {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public Set<Inventory> getInventories() {
+        return inventories;
+    }
+
+    public void setInventories(Set<Inventory> inventories) {
+        this.inventories = inventories;
     }
 }
