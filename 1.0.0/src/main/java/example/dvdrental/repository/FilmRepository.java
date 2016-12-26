@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -51,5 +53,23 @@ public class FilmRepository {
         entityManager.flush();
 
         return filmData;
+    }
+
+    public List<FilmDomain> findFilmByCustomerRentalId(Long customerId) {
+        Query query = entityManager.createQuery("FROM Film film JOIN FETCH film.inventories inv JOIN FETCH inv.rentals rental WHERE rental.customerId = :id");
+        query.setParameter("id", customerId);
+        List<Film> films = query.getResultList();
+
+        List<FilmDomain> filmDomains = new ArrayList<>();
+        films.forEach(film -> {
+            FilmDomain filmDomain = new FilmDomain();
+            filmDomain.setFilmId(film.getFilmId());
+            filmDomain.setDescription(film.getDescription());
+            filmDomain.setTitle(film.getTitle());
+
+            filmDomains.add(filmDomain);
+        });
+
+        return filmDomains;
     }
 }

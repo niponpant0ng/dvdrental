@@ -1,6 +1,7 @@
 package example.dvdrental.repository;
 
 import example.dvdrental.AppConfig;
+import example.dvdrental.domain.FilmDomain;
 import example.dvdrental.model.Film;
 import example.dvdrental.model.Language;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 
 /**
  * Created by nipon on 12/21/16.
@@ -68,5 +70,14 @@ public class FilmRepositoryTest {
         assertThat(film.getFilmId(), is(notNullValue()));
         assertThat(film.getLanguage(), is(notNullValue()));
         assertThat(film.getLanguage().getLanguageId(), is(notNullValue()));
+    }
+
+    @Test
+    @Transactional
+    public void testFindFilmByRentalId() {
+        List<FilmDomain> films = filmRepository.findFilmByCustomerRentalId(251L);
+
+        assertThat(films.size(), is(not(0)));
+        films.forEach(film -> assertThat(film.getLanguageDomain(), is(nullValue())));
     }
 }
