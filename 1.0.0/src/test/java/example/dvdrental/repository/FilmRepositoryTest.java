@@ -2,6 +2,7 @@ package example.dvdrental.repository;
 
 import example.dvdrental.AppConfig;
 import example.dvdrental.domain.FilmDomain;
+import example.dvdrental.model.Actor;
 import example.dvdrental.model.Film;
 import example.dvdrental.model.Language;
 import org.junit.Test;
@@ -12,8 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -79,5 +79,18 @@ public class FilmRepositoryTest {
 
         assertThat(films.size(), is(not(0)));
         films.forEach(film -> assertThat(film.getLanguageDomain(), is(nullValue())));
+    }
+
+    @Test
+    @Transactional
+    public void testCreateWithActor() {
+        Actor actor = new Actor();
+        actor.setActorId(1L);
+        actor.setName("john");
+
+        Film film = filmRepository.getFilm(1L);
+        film.setActors(Collections.singletonList(actor));
+
+        filmRepository.create(film);
     }
 }

@@ -34,8 +34,15 @@ public class FilmRepository {
         return query.getResultList();
     }
 
+    public Film getFilm(Long id) {
+        Query query = entityManager.createQuery("FROM Film WHERE filmId = :filmId");
+        query.setParameter("filmId", id);
+
+        return (Film) query.getSingleResult();
+    }
+
     public List<Film> getFilmsUsingFetchJoin() {
-        Query query = entityManager.createQuery("FROM Film film JOIN FETCH film.language");
+        Query query = entityManager.createQuery("FROM Film film JOIN FETCH film.language LEFT JOIN FETCH film.actors");
         return query.getResultList();
     }
 
