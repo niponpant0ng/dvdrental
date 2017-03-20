@@ -5,6 +5,7 @@ import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,6 +31,14 @@ public class Film {
     @OneToMany(mappedBy = "film")
     @Cascade(value = CascadeType.SAVE_UPDATE)
     private Set<Inventory> inventories;
+
+    @ManyToMany
+    @JoinTable(
+        name = "actor_film",
+        joinColumns = @JoinColumn(name = "film_id"),
+        inverseJoinColumns = @JoinColumn(name = "actor_id")
+    )
+    private List<Actor> actors;
 
     public Long getFilmId() {
         return filmId;
@@ -69,5 +78,13 @@ public class Film {
 
     public void setInventories(Set<Inventory> inventories) {
         this.inventories = inventories;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 }
